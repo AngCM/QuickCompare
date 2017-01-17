@@ -2,13 +2,13 @@ var fs = require('fs');
 var readline = require('readline');
 var google = require('googleapis');
 var googleAuth = require('google-auth-library');
+
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/drive-nodejs-quickstart.json
 var SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly'];
 var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
     process.env.USERPROFILE) + '/.credentials/';
 var TOKEN_PATH = TOKEN_DIR + 'drive-nodejs-quickstart.json';
-
 
 // Load client secrets from a local file.
 fs.readFile('client_secret.json', function processClientSecrets(err, content) {
@@ -18,7 +18,7 @@ fs.readFile('client_secret.json', function processClientSecrets(err, content) {
   }
   // Authorize a client with the loaded credentials, then call the
   // Drive API.
-  authorize(JSON.parse(content), getFile);
+  authorize(JSON.parse(content), listFiles);
 });
 
 /**
@@ -100,39 +100,26 @@ function storeToken(token) {
  *
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
-function getFile(auth) {
-  var drive = google.drive({ version: 'v3', auth: auth });
-  var fileId = '1D9qkjfm0xoQ-u2MudqjMAFng2OuDEuPgZpjOAJh38L0';
-  var dest = fs.createWriteStream('craigslistdata.csv');
-
-  drive.files.export({
-     fileId: fileId,
-     mimeType: 'text/csv'
-  })
-  .on('end', function() {
-    console.log('Done');
-  })
-  .on('error', function(err) {
-    console.log('Error during download', err);
-  })
-  .pipe(dest);
-
-
+function listFiles(auth) {
+  var service = google.drive('v3');
+  service.files.list({
+    auth: auth,
+    pageSize: 10,
+    fields: "nextPageToken, files(id, name)"
+  }, function(err, response) {
+    if (err) {
+      console.log('The API returned an error: ' + err);
+      return;
+    }
+    var files = response.files;
+    if (files.length == 0) {
+      console.log('No files found.');
+    } else {
+      console.log('Files:');
+      for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        console.log('%s (%s)', file.name, file.id);
+      }
+    }
+  });
 }
-
-/*function downloadFile() {
-  var fileId = '1D9qkjfm0xoQ-u2MudqjMAFng2OuDEuPgZpjOAJh38L0';
-  var dest = fs.createWriteStream('/tmp/craigslistdata.csv');
-  drive.files.export({
-     fileId: fileId,
-     mimeType: 'text/csv'
-  })
-  .on('end', function() {
-    console.log('Done');
-  })
-  .on('error', function(err) {
-    console.log('Error during download', err);
-  })
-  .pipe(dest);
-
-}*/
