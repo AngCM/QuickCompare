@@ -49,14 +49,13 @@ function EDMUNDSAPI(key) {
 	
 	/**
 	 * Assigned API Key. Register for an API Key <a href="http://developer.edmunds.com/apps/register">here</a>
-	 *chtquhp3zz27jkmkxc24ev4u
+	 *
 	 * @config _api_key
 	 * @private
 	 * @type string
 
 	 */
-	var _api_key = chtquhp3zz27jkmkxc24ev4u;
-
+	var _api_key = key
 	/**
 	 * The base URL for the API
 	 * http or https depending on the site, defaulting to http: if other.

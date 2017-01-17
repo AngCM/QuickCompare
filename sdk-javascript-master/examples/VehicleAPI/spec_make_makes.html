@@ -7,7 +7,7 @@
 <body>
 	<div id="results-body"></div>
 	<script>
-	  	window.sdkAsyncInit = function() {
+	  	window.sdkAsyncInit = function() { 
 	    	// Instantiate the SDK
 			var res = new EDMUNDSAPI('chtquhp3zz27jkmkxc24ev4u');
 			// Optional parameters
@@ -27,6 +27,7 @@
 			// Fire the API call
 			res.api('/api/vehicle/v2/makes', options, success, fail);
 		    // Additional initialization code such as adding Event Listeners goes here
+		    body.innerHTML = "Nothing more to see";
 	  };
 	  // Load the SDK asynchronously
 	  (function(d, s, id){
@@ -37,5 +38,6 @@
 	     	sdkjs.parentNode.insertBefore(js, sdkjs);
 	   }(document, 'script', 'edmunds-jssdk'));
 	</script>
+	Nothing more to see here.
 </body>
 </html>
