@@ -2,47 +2,43 @@
 <html>
 <head>
 	<meta charset=utf-8>
-	<title>Get a list of makes</title>
+	<title>Get TMV with styleID</title>
 </head>
 <body>
 	<div id="results-body"></div>
 	<script>
-	  	window.sdkAsyncInit = function() { 
+	  	window.sdkAsyncInit = function() {
 	    	// Instantiate the SDK
 			var res = new EDMUNDSAPI('chtquhp3zz27jkmkxc24ev4u');
 			// Optional parameters
-			var options = {};
-
-
-
+			var options = {
+				"styleid": "101353967",
+				"condition": "Clean",
+				"mileage": "25000",
+				"zip": 90019
+			};
 			// Callback function to be called when the API response is returned
 			function success(res) {
 				var body = document.getElementById('results-body');
-				if (res.error) {
-					body.innerHTML = "ERROR: " + res.error.message;
-				}
-				body.innerHTML = "The first make in the response is " + res.makes[0].name;
+				body.innerHTML = "The used TMV® price is: " + res.tmv.nationalBasePrice.usedTmvRetail;
 			}
 			// Oops, Houston we have a problem!
 			function fail(data) {
 				console.log(data);
 			}
 			// Fire the API call
-			//res.api('/api/vehicle/v2/makes', options, success, fail);
-			
+			res.api('/v1/api/tmv/tmvservice/calculateusedtmv', options, success, fail);
 		    // Additional initialization code such as adding Event Listeners goes here
 	  };
-
 	  // Load the SDK asynchronously
 	  (function(d, s, id){
 	     	var js, sdkjs = d.getElementsByTagName(s)[0];
 	     	if (d.getElementById(id)) {return;}
 	     	js = d.createElement(s); js.id = id;
-	     	js.src = "../../edmunds.api.sdk.js";
+	     	js.src = "edmunds.api.sdk.js";
 	     	sdkjs.parentNode.insertBefore(js, sdkjs);
 	   }(document, 'script', 'edmunds-jssdk'));
-
 	</script>
-	Nothing more to see here.
+	
 </body>
 </html>
